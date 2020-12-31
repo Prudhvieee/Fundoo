@@ -1,0 +1,30 @@
+<div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+    <mat-toolbar class="example-toolbar">
+        <button mat-icon-button (click)="snav.toggle()">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <img src="../../../assets/images/keep.png">
+        <h1 class="example-app-name">
+                <span class="f">F</span>
+                <span class="u">u</span>
+                <span class="n">n</span>
+                <span class="d">d</span>
+                <span class="o">o</span>
+                <span class="O">o</span>&nbsp;
+        </h1>
+    </mat-toolbar>
+    <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
+            fixedTopGap="56">
+            <mat-nav-list>
+                note
+            </mat-nav-list>
+            <mat-nav-list>
+                reminder
+            </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <router-outlet></router-outlet>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>

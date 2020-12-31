@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { from } from 'rxjs';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-
+import { FormGroup, FormControl, Validators, FormBuilder, FormGroupDirective, NgForm } from '@angular/forms';
+import {UserServiceService} from '../../services/userService/user-service.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
+  hide=true;
   registerForm: FormGroup;
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder,private router: Router,private userService:UserServiceService) { }
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
       firstName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(12), Validators.pattern('[a-zA-Z ]*')]],
@@ -24,28 +26,24 @@ export class RegisterComponent implements OnInit {
     let confirmPass = group.controls.cpassword.value;
     return pass === confirmPass ? null : { notSame: true }
   }
-  register($event) {
-    let reqdata = {
-      firstName: this.registerForm.value.firstName,
-      lastName: this.registerForm.value.lastName,
-      email: this.registerForm.value.email,
-      password: this.registerForm.value.password
-    }
-    console.log(" req data ", reqdata);
-    console.log(" calling register", $event);
-  }
-  private createUser = (registerFormValue) => {
+  register = (registerFormValue: { firstName: any; lastName: any; email: any; password: any; }) => {
     try {
       let newUser = {
         firstName: registerFormValue.firstName,
         lastName: registerFormValue.lastName,
         email: registerFormValue.email,
         password: registerFormValue.password,
+        service: 'advance'
       }
-      console.log("new user created ", newUser);
+      this.userService.registerUser(newUser).subscribe(response => {
+        console.log(" register successfulll", response);
+      })
+      this.router.navigate(['login']);
     } catch (error) {
       console.log(error);
-
     }
+  }
+  login() {
+    this.router.navigate(['login']);
   }
 }
